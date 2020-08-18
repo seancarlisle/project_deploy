@@ -22,6 +22,13 @@
         - "{{ project_details }}"
       register: project_info
 
+    - name: Give admin access to the project for future tasks
+      os_user_role:
+        cloud: "{{ os_cloud }}"
+        user: "admin"
+        role: "admin"
+        project: "{{ project_info.results[0].project.id }}"
+
     - name: Set the project quotas
       os_quota:
         cloud: "{{ os_cloud }}"
