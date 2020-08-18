@@ -13,27 +13,49 @@
   #      cloud: default
 
   tasks:
+    - name: Create the new project
+      os_project:
+        cloud: "{{ os_cloud }}"
+        name: "{{ item.name }}"
+        domain_id: "{{ item.domain }}"
+      with_items:
+        - "{{ project_details }}"
+      register: project_info
+
+    - name: Set the project quotas
+      os_quota:
+        cloud: "{{ os_cloud }}"
+        name: "{{ project_info.results[0].project.id }}"
+        cores: "{{ item.cores }}"
+        ram: "{{ item.ram }}"
+        gigabytes: "{{ item.gigabytes }}"
+        instances: "{{ item.instances }}"
+        security_group_rule: "{{ item.security_group_rule }}"
+        security_group: "{{ item.security_group }}"
+      with_items:
+        - "{{ project_quotas }}"
+
     - name: Create project networks
       os_network:
-        cloud: {{ os_cloud }}
-        name: {{ item.name }}
-        project: {{ item.project }}
-        provider_physical_network: {{ item.provider_physical_network }}
-        provider_network_type: {{ item.provider_network_type }}
-        provider_segmentation_id: {{ item.provider_segmentation_id }}
+        cloud: "{{ os_cloud }}"
+        name: "{{ item.name }}"
+        project: "{{ project_info.results[0].project.id }}"
+        provider_physical_network: "{{ item.provider_physical_network }}"
+        provider_network_type: "{{ item.provider_network_type }}"
+        provider_segmentation_id: "{{ item.provider_segmentation_id }}"
       with_items:
-        - project_neutron_networks
+        - "{{ project_neutron_networks }}"
 
     - name: Create project subnets 
       os_subnet:
-        cloud: {{ os_cloud }}
-        name: {{ item.name }}
-        project: {{ item.project }}
-        network_name: {{ item.network_name }}
-        cidr: {{ item.cidr }}
-        gateway_ip: {{ item.gateway_ip }}
-        dns_nameservers: {item.dns_nameservers }}
-        allocation_pool_start: {{ item.allocation_pool_start }}
-        allocation_pool_end: {{ item.allocation_pool_end }}
+        cloud: "{{ os_cloud }}"
+        name: "{{ item.name }}"
+        project: "{{ project_info.results[0].project.id }}"
+        network_name: "{{ item.network_name }}"
+        cidr: "{{ item.cidr }}"
+        gateway_ip: "{{ item.gateway_ip }}"
+        dns_nameservers: "{{ item.dns_nameservers }}"
+        allocation_pool_start: "{{ item.allocation_pool_start }}"
+        allocation_pool_end: "{{ item.allocation_pool_end }}"
       with_items:
-        - project_neutron_subnets
+        - "{{ project_neutron_subnets }}"

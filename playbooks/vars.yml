@@ -1,34 +1,32 @@
 ---
 
-# TODO: Write modules for these activities
-# These variables are unused until said modules are functional
+os_cloud: default
 
 project_details:
   name: myTestProject
   domain: default
 
 project_quotas:
-  project: myTestProject
   cores: 111
   ram: 1111
   gigabytes: 111
   instances: 111
+  security_group_rule: 1111
+  security_group: 1111
 
-project_designate_zone:
-  name: mytestproject.test.com
-  project: myTestProject
-  
-# TODO
-#
+#project_designate_zone:
+#  name: mytestproject.test.com
+#  project: myTestProject
 
+# Assumed to be the project created earlier in the playbook
 project_neutron_networks:
   # Can be repeated as many times as necessary
   - name: myTestNet
     provider_physical_network: vlan
     provider_network_type: vlan
     provider_segmentation_id: 111
-    project: myTestProject
 
+# Assumed to be the project created earlier in the playbook
 project_neutron_subnets:
   # Can be repeated as many times as necessary
   - name: myTestSubnet
@@ -40,6 +38,3 @@ project_neutron_subnets:
       - 8.8.4.4
     allocation_pool_start: 192.168.0.2
     allocation_pool_end: 192.168.0.254
-    project: myTestProject
-
-
