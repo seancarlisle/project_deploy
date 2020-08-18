@@ -1,0 +1,45 @@
+---
+
+# TODO: Write modules for these activities
+# These variables are unused until said modules are functional
+
+project_details:
+  name: myTestProject
+  domain: default
+
+project_quotas:
+  project: myTestProject
+  cores: 111
+  ram: 1111
+  gigabytes: 111
+  instances: 111
+
+project_designate_zone:
+  name: mytestproject.test.com
+  project: myTestProject
+  
+# TODO
+#
+
+project_neutron_networks:
+  # Can be repeated as many times as necessary
+  - name: myTestNet
+    provider_physical_network: vlan
+    provider_network_type: vlan
+    provider_segmentation_id: 111
+    project: myTestProject
+
+project_neutron_subnets:
+  # Can be repeated as many times as necessary
+  - name: myTestSubnet
+    network_name: myTestNet
+    cidr: 192.168.0.0/24
+    gateway_ip: 192.168.0.1
+    dns_nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+    allocation_pool_start: 192.168.0.2
+    allocation_pool_end: 192.168.0.254
+    project: myTestProject
+
+

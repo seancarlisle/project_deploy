@@ -1,0 +1,39 @@
+---
+
+# Playbook deploys a new project, networks, subnets, Designate zone, and sets quotas
+
+- name: Create a project and its assets
+  hosts: localhost
+  vars_files:
+    - vars.yml
+
+  #pre_tasks:
+  #  - name: Retrieve a token as the admin user # should create an ansible variable named auth_token as an ansible fact
+  #    os_auth:
+  #      cloud: default
+
+  tasks:
+    - name: Create project networks
+      os_network:
+        cloud: {{ os_cloud }}
+        name: {{ item.name }}
+        project: {{ item.project }}
+        provider_physical_network: {{ item.provider_physical_network }}
+        provider_network_type: {{ item.provider_network_type }}
+        provider_segmentation_id: {{ item.provider_segmentation_id }}
+      with_items:
+        - project_neutron_networks
+
+    - name: Create project subnets 
+      os_subnet:
+        cloud: {{ os_cloud }}
+        name: {{ item.name }}
+        project: {{ item.project }}
+        network_name: {{ item.network_name }}
+        cidr: {{ item.cidr }}
+        gateway_ip: {{ item.gateway_ip }}
+        dns_nameservers: {item.dns_nameservers }}
+        allocation_pool_start: {{ item.allocation_pool_start }}
+        allocation_pool_end: {{ item.allocation_pool_end }}
+      with_items:
+        - project_neutron_subnets
